@@ -10,6 +10,7 @@ entity stage_template is
 		clk: in std_logic;
 		input: in previous_stage_output_type;
 		output: out stage_output_type := DEFAULT_STAGE_OUTPUT;
+		transient_output: out stage_output_type := DEFAULT_STAGE_OUTPUT;
 		should_stall: in std_logic;
 		hold_in: in std_logic;
 		hold_out: out std_logic
@@ -38,6 +39,8 @@ architecture Behavioral of stage_template is
 
 		return output;
 	end function;
+
+
 begin
 	hold_out <= buffered_input.valid;
 
@@ -62,8 +65,10 @@ begin
 
 			if hold_in = '0' and not(v_should_stall) then
 				output <= f(v_input);
+				transient_output <= f(v_input);
 				buffered_input <= DEFAULT_PREVIOUS_STAGE_OUTPUT;
 			else
+				transient_output <= DEFAULT_STAGE_OUTPUT;
 				buffered_input <= v_input;
 			end if;
 		end if;

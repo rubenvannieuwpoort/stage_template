@@ -14,6 +14,7 @@ architecture behavior of stage_test is
 			clk: in std_logic;
 			input: in previous_stage_output_type;
 			output: out stage_output_type := DEFAULT_STAGE_OUTPUT;
+			transient_output: out stage_output_type := DEFAULT_STAGE_OUTPUT;
 			should_stall: in std_logic;
 			hold_in: in std_logic;
 			hold_out: out std_logic
@@ -34,11 +35,12 @@ architecture behavior of stage_test is
 	signal should_stall: std_logic := '0';
 	signal data: previous_stage_output_type := DEFAULT_PREVIOUS_STAGE_OUTPUT;
 	signal output: stage_output_type := DEFAULT_STAGE_OUTPUT;
+	signal transient_output: stage_output_type := DEFAULT_STAGE_OUTPUT;
 
 	constant clk_period : time := 10 ns;
 begin
 	previous_stage_inst: previous_stage port map(clk => clk, hold_in => hold, output => data);
-	stage_inst: stage_template port map(clk => clk, input => data, output => output, should_stall => should_stall, hold_in => hold_in, hold_out => hold);
+	stage_inst: stage_template port map(clk => clk, input => data, output => output, transient_output => transient_output, should_stall => should_stall, hold_in => hold_in, hold_out => hold);
 
 	clk_process :process
 	begin
